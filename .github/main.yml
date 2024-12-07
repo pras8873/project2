@@ -1,0 +1,32 @@
+name: Run Autolysis Script
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  run-autolysis:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas seaborn matplotlib openai
+
+      - name: Run Autolysis Script
+        env:
+          AIPROXY_TOKEN: ${{ secrets.AIPROXY_TOKEN }}
+        run: |
+          python autolysis.py goodreads.csv
+          python autolysis.py happiness.csv
+          python autolysis.py media.csv
